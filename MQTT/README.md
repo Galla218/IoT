@@ -37,7 +37,7 @@ nsComment			= "MQTT Broker Cert"
 
 Now you should have a certificate for your server signed by your CA certificate!
 
-### Knowledge Check
+### Progress Check
 
 Before moving onto making the client cert, we will first check to make sure everything is working properly by loading the CA and server cert onto our Mosquitto broker. Add the following to your `mosquitto.conf` file and restart the service.
 
