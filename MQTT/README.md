@@ -1,13 +1,13 @@
 # How to setup TLS on MQTT Broker using Mosquitto and Securely Connect with ESP8266
 
 #### Motivation behind this guide
-After looking online for serval hours for tutorials on this, it became apparent to me that it was not going to be as easy as I had hoped for. Many of the tutorials I found varied in their implementations, some were blatantly wrong or lacked sufficient documentation, and others were outdated. Out of the box Mosquttio does not supply any security features. It is easy to setup a username and password requirement, but your traffic is still sent in cleartext. Setting up security on your IoT devices should not be as difficult as this was for me. Anybody who finds this, I hope this can cut down on the amount of time it takes you to implement this level of security on your devices and prevents some migraines from occurring.
+After looking for serval hours for tutorials on this, it became apparent to me that it was not going to be as easy as I had hoped for. Many of the tutorials I found varied in their implementations, some were blatantly wrong or lacked sufficient documentation, and others were outdated. Out of the box Mosquttio does not supply any security features. It is easy to setup a username and password requirement, but your traffic is still sent in cleartext. Setting up security on your IoT devices should not be as difficult as this was for me. Anybody who finds this, I hope this can cut down on the amount of time it takes you to implement this level of security on your devices and prevents some migraines from occurring.
 
 ## Certificates
 Starting from the beginning, we need to create a certificate chain with a self-signed CA certificate, server certificate, and our client certificate. This can all be done using `OpenSSL`. Inside this folder will be two bash scripts. One for creating the CA cert and the other for creating the server and client certs. If you want to run the commands by hand instead, they will be documented below.
 
 ### CA Certificate
-This command creates a new certificate and key which we will use to sign the rest of our certificates with. Feel free to change the parameters around to your liking. The content within the `subj` parameter is not super important for the CA cert but will be later when making the other ones.
+This command creates a new authority certificate and key which we will use to sign the rest of our certificates with. Feel free to change the parameters around to your liking. The content within the `subj` parameter is not super important for the CA cert but will be later when making the other ones.
 
 `openssl req -new -x509 -days 3650 -extensions v3_ca -keyout mqtt_ca.key -out mqtt_ca.crt -subj "/CN=MQTT CA/O=PrestigeWorldWide/OU=generate-CA/emailAddress=nobody@example.net"`
 
@@ -16,7 +16,7 @@ Create an RSA server private key
 
 `openssl genrsa -out mosq_serv.key 2048`
 
-Create a Certificate Signing Request (CSR) using the newly generate private key. A CSR is an intermediate step to allow you to ask the CA for a certificate and supple necessary information for the certificate.
+Create a Certificate Signing Request (CSR) using the newly generate private key. A CSR is an intermediate step to allow you to ask the CA for a certificate and supply necessary information for the certificate.
 
 **CN must equal the hostname of the node you are running your mosquitto broker on**
 
